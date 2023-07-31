@@ -1,6 +1,3 @@
-import 'package:app_xpox/responsive/layout.dart';
-import 'package:app_xpox/responsive/mobile_layout.dart';
-import 'package:app_xpox/responsive/web_layout.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
