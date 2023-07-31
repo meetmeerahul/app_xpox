@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "745118102110",
+    "project_id": "app-xpox",
+    "storage_bucket": "app-xpox.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:745118102110:android:a2e4547b6a67d1c1053acf",
+        "android_client_info": {
+          "package_name": "com.example.app_xpox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "745118102110-73noum057e9hopd2f5o6c51tfe5bpmr8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1QVqpVm_AWEwFka0KMssaiMNrtoFpxPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "745118102110-73noum057e9hopd2f5o6c51tfe5bpmr8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,3 @@
-import 'package:app_xpox/utils/gradiant.dart';
 import 'package:flutter/material.dart';
 
 class MobileLayout extends StatelessWidget {
@@ -10,8 +9,8 @@ class MobileLayout extends StatelessWidget {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: getGradiant(),
+        decoration: const BoxDecoration(
+          color: Colors.black,
         ),
         child: const Center(child: Text('Mobile layout')),
       ),
