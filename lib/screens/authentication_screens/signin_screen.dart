@@ -1,7 +1,9 @@
+import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/screens/authentication_screens/signup_screen.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
 import 'package:app_xpox/utils/gradiant.dart';
 import 'package:app_xpox/utils/spacing.dart';
+import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -15,6 +17,8 @@ class _SigninScreenState extends State<SigninScreen> {
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
+
+  bool isLoading = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -99,14 +103,18 @@ class _SigninScreenState extends State<SigninScreen> {
                       ),
                       getVerticalSpace(20),
                       SizedBox(
-                        height: 40,
-                        width: 300,
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.check),
-                          label: const Text('Login'),
-                        ),
-                      ),
+                          height: 40,
+                          width: 300,
+                          child: isLoading != true
+                              ? ElevatedButton.icon(
+                                  onPressed: signinUser,
+                                  icon: const Icon(Icons.check),
+                                  label: const Text('Login'),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ))),
                       getVerticalSpace(20),
                       const Text(
                         'OR',
@@ -160,5 +168,22 @@ class _SigninScreenState extends State<SigninScreen> {
         ),
       ),
     );
+  }
+
+  signinUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    String res = await AuthMethods().signinuser(
+        email: emailController.text, password: passwordController.text);
+
+    if (res == "Success") {
+    } else {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, res);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 }
