@@ -1,9 +1,11 @@
 import 'package:app_xpox/controller/bottom_nav_controller.dart';
+import 'package:app_xpox/screens/add_post/add_post_screen.dart';
 import 'package:app_xpox/screens/home/home_screen.dart';
 import 'package:app_xpox/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+// ignore: must_be_immutable
 class BottomNavScreen extends StatelessWidget {
   BottomNavScreen({super.key});
 
@@ -16,6 +18,7 @@ class BottomNavScreen extends StatelessWidget {
     List pages = [
       const HomeScreen(),
       const SearchScreen(),
+      const AddPostScreen(),
     ];
     return Scaffold(
       body: Obx(() => pages[getIndex.currentIndex.value]),
@@ -33,7 +36,8 @@ class BottomNavScreen extends StatelessWidget {
           items: const [
             BottomNavigationBarItem(label: '', icon: Icon(Icons.home_outlined)),
             BottomNavigationBarItem(label: '', icon: Icon(Icons.search)),
-            BottomNavigationBarItem(label: '', icon: Icon(Icons.add)),
+            BottomNavigationBarItem(
+                label: '', icon: Icon(Icons.add_box_outlined)),
             BottomNavigationBarItem(
                 label: '', icon: Icon(Icons.notifications_none)),
             BottomNavigationBarItem(

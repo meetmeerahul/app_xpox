@@ -1,6 +1,6 @@
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/screens/authentication_screens/signup_screen.dart';
-import 'package:app_xpox/screens/home/home_screen.dart';
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
 import 'package:app_xpox/utils/gradiant.dart';
 import 'package:app_xpox/utils/spacing.dart';
@@ -182,7 +182,7 @@ class _SigninScreenState extends State<SigninScreen> {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => BottomNavScreen(),
         ),
       );
     } else {

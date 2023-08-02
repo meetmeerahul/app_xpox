@@ -1,4 +1,4 @@
-import 'package:app_xpox/utils/diamensions.dart';
+import 'package:app_xpox/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class ResponsiveLayout extends StatelessWidget {
