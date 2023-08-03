@@ -1,6 +1,7 @@
 import 'package:app_xpox/controller/bottom_nav_controller.dart';
 import 'package:app_xpox/screens/add_post/add_post_screen.dart';
 import 'package:app_xpox/screens/home/home_screen.dart';
+import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:app_xpox/screens/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,8 @@ class BottomNavScreen extends StatelessWidget {
       const HomeScreen(),
       const SearchScreen(),
       const AddPostScreen(),
+      const Text('Notification'),
+      const ProfileScreen(),
     ];
     return Scaffold(
       body: Obx(() => pages[getIndex.currentIndex.value]),
