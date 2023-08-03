@@ -1,6 +1,5 @@
 import 'package:app_xpox/providers/user_provider.dart';
-import 'package:app_xpox/resourses/auth_methods.dart';
-import 'package:app_xpox/screens/authentication_screens/signin_screen.dart';
+import 'package:app_xpox/screens/home/widgets/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,30 +31,39 @@ class _HomeScreenState extends State<HomeScreen> {
     model.User user = Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
-      body: Center(
-        child: GestureDetector(
-          onTap: () {
-            AuthMethods().signout();
-
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => const SigninScreen(),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Image(
+          image: AssetImage('assets/logo.png'),
+          width: 100,
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.message_outlined,
+                color: Colors.white,
+              ))
+        ],
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+        builder: (context,
+            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: Colors.white,
               ),
             );
-          },
-          child: Row(
-            children: [
-              const Text(
-                'HomePage',
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                "Welcome ${user.email}",
-                style: const TextStyle(color: Colors.white),
-              ),
-            ],
-          ),
-        ),
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) => PostCard(
+              snap: snapshot.data!.docs[index].data(),
+            ),
+          );
+        },
       ),
     );
   }

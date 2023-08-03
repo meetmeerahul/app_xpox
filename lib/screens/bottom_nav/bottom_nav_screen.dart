@@ -37,11 +37,17 @@ class BottomNavScreen extends StatelessWidget {
             BottomNavigationBarItem(label: '', icon: Icon(Icons.home_outlined)),
             BottomNavigationBarItem(label: '', icon: Icon(Icons.search)),
             BottomNavigationBarItem(
-                label: '', icon: Icon(Icons.add_box_outlined)),
+              label: '',
+              icon: Icon(Icons.add_box_outlined),
+            ),
             BottomNavigationBarItem(
-                label: '', icon: Icon(Icons.notifications_none)),
+              label: '',
+              icon: Icon(Icons.notifications_none),
+            ),
             BottomNavigationBarItem(
-                label: '', icon: Icon(Icons.person_outlined))
+              label: '',
+              icon: Icon(Icons.person_outlined),
+            )
           ],
         ),
       ),
