@@ -104,4 +104,5 @@ class AuthMethods {
   signout() async {
     await _auth.signOut();
   }
+  
 }

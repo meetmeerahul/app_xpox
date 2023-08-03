@@ -1,3 +1,4 @@
+import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -53,9 +54,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 }
                 return ListView.builder(
-                    itemCount: (snapshot.data! as dynamic).docs.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) {
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                              uid: (snapshot.data! as dynamic).docs[index]
+                                  ['uid']),
+                        ),
+                      ),
+                      child: ListTile(
                         leading: CircleAvatar(
                           radius: 20,
                           backgroundImage: NetworkImage(
@@ -65,8 +74,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         title: Text(
                             "${(snapshot.data! as dynamic).docs[index]['usernamr']}",
                             style: const TextStyle(color: Colors.white)),
-                      );
-                    });
+                      ),
+                    );
+                  },
+                );
               },
             )
           : FutureBuilder(

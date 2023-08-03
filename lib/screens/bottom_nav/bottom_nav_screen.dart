@@ -3,6 +3,7 @@ import 'package:app_xpox/screens/add_post/add_post_screen.dart';
 import 'package:app_xpox/screens/home/home_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:app_xpox/screens/search/search_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +22,7 @@ class BottomNavScreen extends StatelessWidget {
       const SearchScreen(),
       const AddPostScreen(),
       const Text('Notification'),
-      const ProfileScreen(),
+      ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
     ];
     return Scaffold(
       body: Obx(() => pages[getIndex.currentIndex.value]),
