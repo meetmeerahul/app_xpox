@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'dart:typed_data';
 
 import 'package:app_xpox/models/user.dart' as model;
@@ -57,7 +55,7 @@ class AuthMethods {
 
         // await _firestore.collection('users').add({
         //   "uid": cred.user!.uid,
-        //   "usernamr": username,
+        //   "": username,
         //   "password": password,
         //   "bio": bio,
         //   "email": email,
@@ -104,5 +102,20 @@ class AuthMethods {
   signout() async {
     await _auth.signOut();
   }
-  
+
+  Future<String> resetPassword(String email) async {
+    String res = "Some error occured";
+
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      res = "Success";
+    } on FirebaseAuthException catch (err) {
+      if (err.code == "user-not-found") {
+        res = "User not registred";
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return res;
+  }
 }

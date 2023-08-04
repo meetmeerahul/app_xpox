@@ -1,4 +1,5 @@
 import 'package:app_xpox/resourses/auth_methods.dart';
+import 'package:app_xpox/screens/authentication_screens/reset_password.dart';
 import 'package:app_xpox/screens/authentication_screens/signup_screen.dart';
 import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
@@ -6,6 +7,8 @@ import 'package:app_xpox/utils/gradiant.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
+
+
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -88,34 +91,43 @@ class _SigninScreenState extends State<SigninScreen> {
                           ),
                           isObscure: true),
                       getVerticalSpace(20),
-                      const Row(
+                      Row(
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Forgot password ? ',
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const ResetPassword(),
+                                ),
+                              ),
+                              child: const Text(
+                                'Forgot password ? ',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                              ),
                             ),
                           ),
                         ],
                       ),
                       getVerticalSpace(20),
                       SizedBox(
-                          height: 40,
-                          width: 300,
-                          child: isLoading != true
-                              ? ElevatedButton.icon(
-                                  onPressed: signinUser,
-                                  icon: const Icon(Icons.check),
-                                  label: const Text('Login'),
-                                )
-                              : const Center(
-                                  child: CircularProgressIndicator(
+                        height: 40,
+                        width: 300,
+                        child: isLoading != true
+                            ? ElevatedButton.icon(
+                                onPressed: signinUser,
+                                icon: const Icon(Icons.check),
+                                label: const Text('Login'),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(
                                   color: Colors.white,
-                                ))),
+                                ),
+                              ),
+                      ),
                       getVerticalSpace(20),
                       const Text(
                         'OR',

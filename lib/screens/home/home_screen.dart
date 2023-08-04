@@ -18,17 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     getUsername();
-
     listenToChange();
   }
 
   @override
   Widget build(BuildContext context) {
-    
     model.User user = Provider.of<UserProvider>(context).getUser;
 
     return Scaffold(
@@ -69,14 +66,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void getUsername() async {
+  getUsername() async {
     DocumentSnapshot snap = await FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
     setState(() {
-      username = (snap.data() as Map<String, dynamic>)['usernamr'];
+      username = (snap.data() as Map<String, dynamic>)['username'];
     });
 
     print(
@@ -84,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void listenToChange() async {
+  listenToChange() async {
     UserProvider userProvider = Provider.of(context, listen: false);
     await userProvider.refreshUser();
   }

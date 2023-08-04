@@ -44,7 +44,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ? FutureBuilder(
               future: FirebaseFirestore.instance
                   .collection('users')
-                  .where('usernamr',
+                  .where('username',
                       isGreaterThanOrEqualTo: _searchController.text)
                   .get(),
               builder: (context, snapshot) {
@@ -72,7 +72,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ['photoUrl']),
                         ),
                         title: Text(
-                            "${(snapshot.data! as dynamic).docs[index]['usernamr']}",
+                            "${(snapshot.data! as dynamic).docs[index]['username']}",
                             style: const TextStyle(color: Colors.white)),
                       ),
                     );

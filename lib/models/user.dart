@@ -24,7 +24,7 @@ class User {
         "photoUrl": photoUrl,
         "username": username,
         "bio": bio,
-        "follwers": followers,
+        "followers": followers,
         "followings": followings,
       };
 
@@ -32,7 +32,7 @@ class User {
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return User(
-      username: snapshot['usernamr'],
+      username: snapshot['username'],
       bio: snapshot['bio'],
       email: snapshot['email'],
       followers: snapshot['followers'],

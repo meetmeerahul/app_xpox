@@ -42,13 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             appBar: AppBar(
               backgroundColor: Colors.black,
               title: Text(
-                userData['usernamr'],
+                userData['username'],
                 style: const TextStyle(color: Colors.white),
+              ),
+              leading: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                ),
               ),
               actions: [
                 IconButton(
                   onPressed: () async {
                     await AuthMethods().signout();
+
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (context) => const SigninScreen(),
@@ -154,7 +161,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           top: 15,
                         ),
                         child: Text(
-                          userData['usernamr'],
+                          userData['username'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
