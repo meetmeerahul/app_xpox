@@ -4,6 +4,7 @@ import 'package:app_xpox/models/user.dart' as model;
 import 'package:app_xpox/resourses/storage_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,8 +31,7 @@ class AuthMethods {
       if (email.isNotEmpty ||
           password.isNotEmpty ||
           username.isNotEmpty ||
-          bio.isNotEmpty ||
-          file != null) {
+          bio.isNotEmpty) {
         //Registering user
 
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -52,7 +52,7 @@ class AuthMethods {
         await _firestore.collection('users').doc(cred.user!.uid).set(
               user.toJson(),
             );
-
+        String res = "Now you can login with credentials";
         // await _firestore.collection('users').add({
         //   "uid": cred.user!.uid,
         //   "": username,
@@ -63,6 +63,7 @@ class AuthMethods {
         //   "followings": [],
         // });
         //Store the remaining details in database
+        return res;
       }
     } catch (err) {
       res = err.toString();
@@ -100,6 +101,7 @@ class AuthMethods {
   }
 
   signout() async {
+   
     await _auth.signOut();
   }
 
@@ -117,5 +119,45 @@ class AuthMethods {
       print(e.toString());
     }
     return res;
+  }
+
+  Future<bool> signInWithGoogle() async {
+    bool result = false;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credentials = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credentials);
+      User? user = userCredential.user;
+
+      if (user != null) {
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          model.User googleUser = model.User(
+              email: user.email!,
+              uid: userCredential.user!.uid,
+              photoUrl: user.photoURL!,
+              username: user.displayName!.trim(),
+              bio: "######",
+              followers: [],
+              followings: []);
+
+          await _firestore
+              .collection('users')
+              .doc(userCredential.user!.uid)
+              .set(
+                googleUser.toJson(),
+              );
+        }
+      }
+    } catch (err) {
+      print(err);
+    }
+
+    return result;
   }
 }

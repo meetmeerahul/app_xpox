@@ -8,8 +8,6 @@ import 'package:app_xpox/utils/spacing.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
 
-
-
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
 
@@ -141,7 +139,23 @@ class _SigninScreenState extends State<SigninScreen> {
                         height: 40,
                         width: 300,
                         child: ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () async {
+                            bool result =
+                                await AuthMethods().signInWithGoogle();
+
+                            if (result) {
+                              // ignore: use_build_context_synchronously
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => BottomNavScreen(),
+                                ),
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              showSnackbar(
+                                  context, "Error Occured in google signin");
+                            }
+                          },
                           icon: const Image(
                             image: AssetImage('assets/google.png'),
                             height: 20,
