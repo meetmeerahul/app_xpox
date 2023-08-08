@@ -1,6 +1,9 @@
 import 'package:app_xpox/providers/user_provider.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
+import 'package:app_xpox/screens/comment/comment_screen.dart';
 import 'package:app_xpox/screens/widgets/like_animation.dart';
+import 'package:app_xpox/utils/utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +20,32 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
+  int commentCount = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getComments();
+  }
+
+  void getComments() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentCount = snap.docs.length;
+    } catch (er) {
+      showSnackbar(
+        context,
+        er.toString(),
+      );
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     User user = Provider.of<UserProvider>(context).getUser;
@@ -161,7 +190,11 @@ class _PostCardState extends State<PostCard> {
                           )),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CommentScreen(snap: widget.snap),
+                  ),
+                ),
                 icon: const Icon(
                   Icons.comment_outlined,
                   color: Colors.white,
@@ -229,7 +262,7 @@ class _PostCardState extends State<PostCard> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(
-                      "View all 23 comments",
+                      "View all $commentCount comments",
                       style: TextStyle(
                         color: Colors.grey.shade500,
                       ),
