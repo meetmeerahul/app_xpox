@@ -1,12 +1,26 @@
+import 'package:app_xpox/providers/user_provider.dart';
+import 'package:app_xpox/resourses/firestore_methods.dart';
+import 'package:app_xpox/screens/widgets/like_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class PostCard extends StatelessWidget {
+import 'package:app_xpox/models/user.dart';
+
+class PostCard extends StatefulWidget {
   final snap;
   const PostCard({super.key, required this.snap});
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLikeAnimating = false;
+  @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context).getUser;
+
     return Container(
       color: Colors.black,
       padding: const EdgeInsets.symmetric(
@@ -23,7 +37,7 @@ class PostCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 16,
-                  backgroundImage: NetworkImage(snap['profileImage']),
+                  backgroundImage: NetworkImage(widget.snap['profileImage']),
                 ),
                 Expanded(
                   child: Padding(
@@ -33,7 +47,7 @@ class PostCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          snap['username'],
+                          widget.snap['username'],
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, color: Colors.white),
                         )
@@ -80,22 +94,71 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
-            width: double.infinity,
-            child: Image(
-              image: NetworkImage(snap['postUrl']),
-              fit: BoxFit.cover,
+          GestureDetector(
+            onDoubleTap: () async {
+              await FirestoreMethods().likePost(
+                user.uid,
+                widget.snap['postId'],
+                widget.snap['likes'],
+              );
+              setState(() {
+                isLikeAnimating = true;
+              });
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  child: Image(
+                    image: NetworkImage(widget.snap['postUrl']),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: isLikeAnimating ? 1 : 0,
+                  child: LikeAnimation(
+                    isAnimating: isLikeAnimating,
+                    onEnd: () {
+                      setState(() {
+                        isLikeAnimating = false;
+                      });
+                    },
+                    duration: const Duration(milliseconds: 400),
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 100,
+                    ),
+                  ),
+                )
+              ],
             ),
           ),
           Row(
             children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.favorite,
-                  color: Colors.red,
-                ),
+              LikeAnimation(
+                isAnimating: widget.snap['likes'].contains(user.uid),
+                smallLike: true,
+                child: IconButton(
+                    onPressed: () async {
+                      await FirestoreMethods().likePost(
+                        user.uid,
+                        widget.snap['postId'],
+                        widget.snap['likes'],
+                      );
+                    },
+                    icon: widget.snap['likes'].contains(user.uid)
+                        ? const Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          )
+                        : const Icon(
+                            Icons.favorite_border,
+                            color: Colors.white,
+                          )),
               ),
               IconButton(
                 onPressed: () {},
@@ -134,7 +197,7 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${snap['likes'].length}  Likes",
+                  "${widget.snap['likes'].length}  Likes",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -150,11 +213,11 @@ class PostCard extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: snap['username'],
+                          text: widget.snap['username'],
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
-                          text: "  ${snap['description']}",
+                          text: "  ${widget.snap['description']}",
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -177,7 +240,7 @@ class PostCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd().format(
-                      snap['datePublished'].toDate(),
+                      widget.snap['datePublished'].toDate(),
                     ),
                     style: TextStyle(
                       color: Colors.grey.shade500,

@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
-import 'package:app_xpox/screens/authentication_screens/signin_screen.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../authentication_screens/signin_screen.dart';
+
 class ProfileScreen extends StatefulWidget {
   final String uid;
+
   const ProfileScreen({super.key, required this.uid});
 
   @override
@@ -22,6 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int followings = 0;
   bool isFollowing = false;
   bool isLoading = false;
+
+  bool isQuit = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -52,21 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               actions: [
-                IconButton(
-                  onPressed: () async {
-                    await AuthMethods().signout();
-
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const SigninScreen(),
-                      ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.logout,
-                    color: Colors.white,
-                  ),
-                )
+                logoutButton(),
               ],
             ),
             body: ListView(
@@ -209,9 +201,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               itemBuilder: (context, index) {
                                 DocumentSnapshot snap =
                                     (snapshot.data! as dynamic).docs[index];
-                                return Image(
-                                  image: NetworkImage(snap['postUrl']),
-                                  fit: BoxFit.cover,
+                                return GestureDetector(
+                                  onTap: () {},
+                                  child: Image(
+                                    image: NetworkImage(snap['postUrl']),
+                                    fit: BoxFit.cover,
+                                  ),
                                 );
                               });
                         },
@@ -284,5 +279,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       isLoading = false;
     });
+  }
+
+  logoutButton() {
+    return IconButton(
+      onPressed: () async {
+        await AuthMethods().signout();
+        const Center(
+          child: CircularProgressIndicator(backgroundColor: Colors.white),
+        );
+        Timer(const Duration(seconds: 5), () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const SigninScreen(),
+            ),
+          );
+        });
+      },
+      icon: const Icon(
+        Icons.logout,
+        color: Colors.white,
+      ),
+    );
   }
 }

@@ -14,6 +14,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   bool isShowUser = false;
+  bool isLoading = true;
 
   @override
   void dispose() {
@@ -36,6 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
           onFieldSubmitted: (String value) {
             setState(() {
               isShowUser = true;
+              isLoading = true;
             });
           },
         ),
@@ -57,13 +59,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) {
                     return InkWell(
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(
-                              uid: (snapshot.data! as dynamic).docs[index]
-                                  ['uid']),
-                        ),
-                      ),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProfileScreen(
+                                uid: (snapshot.data! as dynamic).docs[index]
+                                    ['uid']),
+                          ),
+                        );
+                      },
                       child: ListTile(
                         leading: CircleAvatar(
                           radius: 20,
@@ -105,6 +109,14 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               },
             ),
+    );
+  }
+
+  circularProgress() {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.white,
+      ),
     );
   }
 }

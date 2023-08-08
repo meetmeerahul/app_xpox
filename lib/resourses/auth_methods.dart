@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:app_xpox/models/user.dart' as model;
 import 'package:app_xpox/resourses/storage_methods.dart';
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthMethods {
@@ -100,9 +103,14 @@ class AuthMethods {
     return res;
   }
 
-  signout() async {
-   
-    await _auth.signOut();
+  Future<bool> signout() async {
+    Timer(const Duration(seconds: 5), () async {
+      await GoogleSignIn().disconnect();
+    });
+    Timer(const Duration(seconds: 5), () async {
+      await _auth.signOut();
+    });
+    return true;
   }
 
   Future<String> resetPassword(String email) async {
@@ -153,6 +161,9 @@ class AuthMethods {
                 googleUser.toJson(),
               );
         }
+      } else {
+        GoogleSignIn().signIn();
+        Get.to(BottomNavScreen());
       }
     } catch (err) {
       print(err);
