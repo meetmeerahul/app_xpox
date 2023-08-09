@@ -201,6 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               itemBuilder: (context, index) {
                                 DocumentSnapshot snap =
                                     (snapshot.data! as dynamic).docs[index];
+
                                 return GestureDetector(
                                   onTap: () {},
                                   child: Image(
@@ -301,5 +302,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Colors.white,
       ),
     );
+  }
+
+  showPopupMenu() {
+    return PopupMenuButton(
+        icon: const Icon(Icons.arrow_downward),
+        surfaceTintColor: Colors.black,
+        color: Colors.white,
+        itemBuilder: (context) => [
+              const PopupMenuItem(
+                child: Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              const PopupMenuItem(
+                  child: Text(
+                "Edit",
+                style: TextStyle(color: Colors.black),
+              ))
+            ]);
   }
 }

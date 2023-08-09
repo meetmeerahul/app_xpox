@@ -126,4 +126,38 @@ class FirestoreMethods {
       );
     }
   }
+
+  Future<String> deletePost(String postId) async {
+    String res = "Error";
+
+    print(postId);
+
+    try {
+      await _firebaseFirestore.collection('posts').doc(postId).delete();
+      res = "Deleted";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  Future<String> updateData(String newValue, String postId) async {
+    // Get a reference to the document
+
+    print(postId);
+    print(newValue);
+    String res = "error";
+    DocumentReference docRef = _firebaseFirestore.doc('posts/$postId');
+
+    try {
+      // Update the specific field using the update method
+      await docRef.update({'description': newValue});
+
+      res = "Success";
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
 }

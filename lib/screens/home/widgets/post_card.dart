@@ -1,14 +1,16 @@
 import 'package:app_xpox/providers/user_provider.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/comment/comment_screen.dart';
+import 'package:app_xpox/screens/edit_post/edit_post_screen.dart';
 import 'package:app_xpox/screens/widgets/like_animation.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import 'package:app_xpox/models/user.dart';
+import 'package:app_xpox/models/user.dart' as model;
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -19,8 +21,16 @@ class PostCard extends StatefulWidget {
 }
 
 class _PostCardState extends State<PostCard> {
+  final TextEditingController _textFieldController = TextEditingController();
   bool isLikeAnimating = false;
   int commentCount = 0;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _textFieldController.dispose();
+  }
 
   @override
   void initState() {
@@ -48,7 +58,7 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context).getUser;
+    model.User user = Provider.of<UserProvider>(context).getUser;
 
     return Container(
       color: Colors.black,
@@ -84,42 +94,54 @@ class _PostCardState extends State<PostCard> {
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) => Dialog(
-                    //     shape: const BeveledRectangleBorder(
-                    //       borderRadius: BorderRadius.all(Radius.zero),
-                    //     ),
-                    //     backgroundColor: Colors.grey,
-                    //     child: ListView(
-                    //       padding: const EdgeInsets.symmetric(
-                    //         vertical: 16,
-                    //       ),
-                    //       shrinkWrap: true,
-                    //       children: [
-                    //         const Text(
-                    //           "Delete",
-                    //         ),
-                    //       ]
-                    //           .map((e) => InkWell(
-                    //                 onTap: () {},
-                    //                 child: Container(
-                    //                   padding: const EdgeInsets.symmetric(
-                    //                       vertical: 12, horizontal: 16),
-                    //                 ),
-                    //               ))
-                    //           .toList(),
-                    //     ),
-                    //   ),
-                    // );
-                  },
-                  icon: const Icon(
-                    Icons.more_vert,
-                    color: Colors.white,
-                  ),
-                )
+
+                //====================Edit deletepost===========================================
+                widget.snap['uid'] == FirebaseAuth.instance.currentUser!.uid
+                    ? PopupMenuButton(
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        ),
+                        onSelected: (value) {
+                          if (value == 0) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditPostScreen(snap: widget.snap),
+                              ),
+                            );
+                          }
+                          if (value == 1) {
+                            deletePost(
+                              widget.snap['postId'].toString(),
+                            );
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 0, //---add this line
+                              child: Text('Edit'),
+                            ),
+                            const PopupMenuItem(
+                              value: 1,
+                              child: Text('Delete'),
+                            ),
+                          ];
+                        })
+                    : PopupMenuButton(
+                        icon: const Icon(Icons.more_vert),
+                        surfaceTintColor: Colors.black,
+                        color: Colors.white,
+                        itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                child: Text(
+                                  "Save",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              )
+                            ])
+                //====================Edit deletepost===========================================
               ],
             ),
           ),
@@ -286,5 +308,29 @@ class _PostCardState extends State<PostCard> {
         ],
       ),
     );
+  }
+
+  _displayTextInputDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('TextField in Dialog'),
+            content: TextField(
+              onChanged: (value) {},
+              controller: _textFieldController,
+              decoration:
+                  const InputDecoration(hintText: "Text Field in Dialog"),
+            ),
+          );
+        });
+  }
+
+  Future<void> deletePost(String postId) async {
+    String res = await FirestoreMethods().deletePost(postId);
+    if (res == "Deleted") {
+      // ignore: use_build_context_synchronously
+      showSnackbar(context, "Post Deleted");
+    }
   }
 }

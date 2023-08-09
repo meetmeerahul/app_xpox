@@ -26,6 +26,7 @@ class _LikeAnimationState extends State<LikeAnimation>
 
   @override
   void initState() {
+    super.initState();
     // TODO: implement initState
 
     _animationController = AnimationController(
