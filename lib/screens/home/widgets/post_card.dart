@@ -22,6 +22,8 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   final TextEditingController _textFieldController = TextEditingController();
+  // ignore: prefer_typing_uninitialized_variables
+
   bool isLikeAnimating = false;
   int commentCount = 0;
 
@@ -36,6 +38,7 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     getComments();
   }
 

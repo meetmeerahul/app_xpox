@@ -142,10 +142,6 @@ class FirestoreMethods {
   }
 
   Future<String> updateData(String newValue, String postId) async {
-    // Get a reference to the document
-
-    print(postId);
-    print(newValue);
     String res = "error";
     DocumentReference docRef = _firebaseFirestore.doc('posts/$postId');
 

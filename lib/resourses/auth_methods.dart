@@ -103,14 +103,17 @@ class AuthMethods {
     return res;
   }
 
-  Future<bool> signout() async {
+  Future<String> signout() async {
+    String res = "error";
     Timer(const Duration(seconds: 5), () async {
       await GoogleSignIn().disconnect();
+      res = "Success";
     });
     Timer(const Duration(seconds: 5), () async {
       await _auth.signOut();
+      res = "success";
     });
-    return true;
+    return res;
   }
 
   Future<String> resetPassword(String email) async {
@@ -170,5 +173,34 @@ class AuthMethods {
     }
 
     return result;
+  }
+
+  Future<String> updateUser({
+    required String username,
+    required String bio,
+    required Uint8List file,
+    required String uid,
+  }) async {
+    String res = "error";
+
+    String photoUrl =
+        await StorageMethods().uploadImageToStorage('profilePics', file, false);
+
+    DocumentReference docRef = _firestore.doc('users/$uid');
+
+    try {
+      // Update the specific field using the update method
+      await docRef.update({
+        'username': username,
+        'bio': bio,
+        'photoUrl': photoUrl,
+      });
+
+      res = "Success";
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
   }
 }

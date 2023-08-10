@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
+
+import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -20,6 +22,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late var userDetails;
   var userData = {};
   int postLen = 0;
   int followers = 0;
@@ -101,7 +104,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             backgroundColor: Colors.black,
                                             borderColor: Colors.white,
                                             textColor: Colors.white,
-                                            function: () {},
+                                            function: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditProfileScreen(
+                                                          snap: userDetails),
+                                                ),
+                                              );
+                                            },
                                           )
                                         : isFollowing
                                             ? FollowButton(
@@ -201,7 +212,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               itemBuilder: (context, index) {
                                 DocumentSnapshot snap =
                                     (snapshot.data! as dynamic).docs[index];
-
                                 return GestureDetector(
                                   onTap: () {},
                                   child: Image(
@@ -270,7 +280,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .data()!['followers']
           .contains(FirebaseAuth.instance.currentUser!.uid);
 
-      setState(() {});
+      setState(() {
+        userDetails = userSnap;
+      });
     } catch (e) {
       showSnackbar(
         context,
@@ -302,25 +314,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Colors.white,
       ),
     );
-  }
-
-  showPopupMenu() {
-    return PopupMenuButton(
-        icon: const Icon(Icons.arrow_downward),
-        surfaceTintColor: Colors.black,
-        color: Colors.white,
-        itemBuilder: (context) => [
-              const PopupMenuItem(
-                child: Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              const PopupMenuItem(
-                  child: Text(
-                "Edit",
-                style: TextStyle(color: Colors.black),
-              ))
-            ]);
   }
 }
