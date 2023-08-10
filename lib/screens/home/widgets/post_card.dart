@@ -27,6 +27,12 @@ class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
   int commentCount = 0;
 
+  late String data;
+
+  String username = "";
+
+  late DocumentReference profileDetails;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -38,7 +44,7 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getProfileDetails();
     getComments();
   }
 
@@ -56,7 +62,27 @@ class _PostCardState extends State<PostCard> {
         er.toString(),
       );
     }
-    setState(() {});
+    //setState(() {});
+  }
+
+  void getProfileDetails() async {
+    try {
+      DocumentSnapshot snap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.snap['uid'])
+          .get();
+
+      setState(() {
+        username = (snap.data() as Map<String, dynamic>)['username'];
+      });
+
+      //print(username);
+    } catch (e) {
+      showSnackbar(
+        context,
+        e.toString(),
+      );
+    }
   }
 
   @override
@@ -89,7 +115,7 @@ class _PostCardState extends State<PostCard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.snap['username'],
+                          username,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, color: Colors.white),
                         )

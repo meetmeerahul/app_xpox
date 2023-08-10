@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
 import 'package:app_xpox/utils/gradiant.dart';
 import 'package:app_xpox/utils/spacing.dart';
@@ -175,6 +176,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (res == 'Success') {
       // ignore: use_build_context_synchronously
       showSnackbar(context, res);
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => BottomNavScreen(),
+          ),
+          (route) => false);
     }
 
     setState(() {
