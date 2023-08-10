@@ -55,18 +55,7 @@ class AuthMethods {
         await _firestore.collection('users').doc(cred.user!.uid).set(
               user.toJson(),
             );
-        String res = "Now you can login with credentials";
-        // await _firestore.collection('users').add({
-        //   "uid": cred.user!.uid,
-        //   "": username,
-        //   "password": password,
-        //   "bio": bio,
-        //   "email": email,
-        //   "followers": [],
-        //   "followings": [],
-        // });
-        //Store the remaining details in database
-        return res;
+        res = "Now you can login with credentials";
       }
     } catch (err) {
       res = err.toString();

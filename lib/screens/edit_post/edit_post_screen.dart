@@ -1,4 +1,5 @@
 import 'package:app_xpox/resourses/firestore_methods.dart';
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -124,7 +125,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
         });
 
         // ignore: use_build_context_synchronously
-        showSnackbar(context, "Updated!!");
+        showSnackbar(context, "Caption Updated!!");
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => BottomNavScreen()),
+            (route) => false);
       } else {
         setState(() {
           _isLoading = false;

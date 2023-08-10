@@ -173,7 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         bio: bioController.text,
         file: _image!);
 
-    if (res == 'Success') {
+    if (res == 'Profile Updated') {
       // ignore: use_build_context_synchronously
       showSnackbar(context, res);
 

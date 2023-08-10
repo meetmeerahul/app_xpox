@@ -223,6 +223,11 @@ class _SignupScreenState extends State<SignupScreen> {
     if (res != 'Success') {
       // ignore: use_build_context_synchronously
       showSnackbar(context, res);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const SigninScreen(),
+          ),
+          (route) => false);
     }
 
     setState(() {
