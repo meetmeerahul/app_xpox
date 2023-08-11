@@ -1,10 +1,12 @@
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({super.key});
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -14,13 +16,11 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   bool isShowUser = false;
-  bool isLoading = true;
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    super.dispose();
     _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -28,95 +28,112 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => BottomNavScreen(),
+            ),
+          ),
+        ),
         title: TextFormField(
           style: const TextStyle(color: Colors.white),
           controller: _searchController,
           decoration: const InputDecoration(
-            label: Text("Search"),
+            labelText: "Search", // Changed label to labelText
           ),
           onFieldSubmitted: (String value) {
             setState(() {
               isShowUser = true;
-              isLoading = true;
             });
           },
         ),
       ),
       body: isShowUser
-          ? FutureBuilder(
+          ? FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
               future: FirebaseFirestore.instance
                   .collection('users')
                   .where('username',
                       isGreaterThanOrEqualTo: _searchController.text)
                   .get(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text("No users found."),
+                  );
+                }
+
                 return ListView.builder(
-                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
+                    var userData = snapshot.data!.docs[index].data();
                     return InkWell(
                       onTap: () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ProfileScreen(
-                                uid: (snapshot.data! as dynamic).docs[index]
-                                    ['uid']),
+                              uid: userData['uid'],
+                            ),
                           ),
                         );
                       },
                       child: ListTile(
                         leading: CircleAvatar(
                           radius: 20,
-                          backgroundImage: NetworkImage(
-                              (snapshot.data! as dynamic).docs[index]
-                                  ['photoUrl']),
+                          backgroundImage: NetworkImage(userData['photoUrl']),
                         ),
                         title: Text(
-                            "${(snapshot.data! as dynamic).docs[index]['username']}",
-                            style: const TextStyle(color: Colors.white)),
+                          "${userData['username']}",
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     );
                   },
                 );
               },
             )
-          : FutureBuilder(
+          : FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
               future: FirebaseFirestore.instance.collection('posts').get(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
                     child: CircularProgressIndicator(
                       color: Colors.white,
                     ),
                   );
                 }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text("No posts available."),
+                  );
+                }
+
                 return StaggeredGridView.countBuilder(
-                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemCount: snapshot.data!.docs.length,
                   crossAxisCount: 3,
-                  itemBuilder: (context, index) => Image.network(
-                    (snapshot.data! as dynamic).docs[index]['postUrl'],
-                  ),
+                  itemBuilder: (context, index) {
+                    var postData = snapshot.data!.docs[index].data();
+                    return Image.network(postData['postUrl']);
+                  },
                   staggeredTileBuilder: (index) => StaggeredTile.count(
-                    (index % 7 == 0 ? 2 : 1),
-                    (index % 7 == 0 ? 2 : 1),
+                    index % 7 == 0 ? 2 : 1,
+                    index % 7 == 0 ? 2 : 1,
                   ),
                   mainAxisSpacing: 8,
                   crossAxisSpacing: 8,
                 );
               },
             ),
-    );
-  }
-
-  circularProgress() {
-    return const Center(
-      child: CircularProgressIndicator(
-        color: Colors.white,
-      ),
     );
   }
 }

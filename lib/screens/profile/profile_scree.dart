@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
+import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 
 import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
+import 'package:app_xpox/screens/profile/followers.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -30,12 +32,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isFollowing = false;
   bool isLoading = false;
 
+  List<dynamic> followersTopass = [];
+
+  List<dynamic> followingsToPass = [];
+
   bool isQuit = false;
+
+  late DocumentSnapshot<Map<String, dynamic>> userSnapshot;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getData();
+    getFollowers();
+    getFollowings();
     print(userData);
   }
 
@@ -55,9 +65,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: const TextStyle(color: Colors.white),
               ),
               leading: IconButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => BottomNavScreen(),
+                  ),
+                ),
                 icon: const Icon(
-                  Icons.arrow_back_ios,
+                  Icons.arrow_back,
+                  color: Colors.white,
                 ),
               ),
               actions: [
@@ -89,8 +104,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     buildStatColum(postLen, "Posts"),
-                                    buildStatColum(followers, "Follwers"),
-                                    buildStatColum(followings, "Followings"),
+                                    InkWell(
+                                        onTap: () => Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FollowScreen(
+                                                        followersList:
+                                                            followersTopass,
+                                                        uid: widget.uid),
+                                              ),
+                                            ),
+                                        child: buildStatColum(
+                                            followers, "Follwers")),
+                                    InkWell(
+                                        onTap: () => Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    FollowScreen(
+                                                        followersList:
+                                                            followingsToPass,
+                                                        isFollowers: false,
+                                                        uid: widget.uid),
+                                              ),
+                                            ),
+                                        child: buildStatColum(
+                                            followings, "Followings")),
                                   ],
                                 ),
                                 Row(
@@ -314,5 +352,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Colors.white,
       ),
     );
+  }
+
+  Future<void> getFollowers() async {
+    try {
+      userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget
+              .uid) // Replace 'uid' with the actual user ID you want to fetch
+          .get();
+
+      // Check if the document exists
+      if (userSnapshot.exists) {
+        // Check if the 'username' field exists in the document
+        if (userSnapshot.data()!.containsKey('username')) {
+          List<dynamic> followers = userSnapshot['followers'];
+
+          followersTopass = followers;
+        } else {
+          print("'username' field doesn't exist in the document.");
+        }
+
+        print('Full snapshot: $userSnapshot');
+      } else {
+        print('Document with the specified UID does not exist.');
+      }
+    } catch (error) {
+      print('Error fetching followers: $error');
+    }
+  }
+
+  Future<void> getFollowings() async {
+    try {
+      userSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget
+              .uid) // Replace 'uid' with the actual user ID you want to fetch
+          .get();
+
+      // Check if the document exists
+      if (userSnapshot.exists) {
+        // Check if the 'username' field exists in the document
+        if (userSnapshot.data()!.containsKey('username')) {
+          List<dynamic> followers = userSnapshot['followings'];
+
+          followingsToPass = followers;
+        } else {
+          print("'username' field doesn't exist in the document.");
+        }
+
+        print('Full snapshot: $userSnapshot');
+      } else {
+        print('Document with the specified UID does not exist.');
+      }
+    } catch (error) {
+      print('Error fetching followers: $error');
+    }
   }
 }
