@@ -10,3 +10,14 @@ getGradiant() {
     ],
   );
 }
+
+getGradiantAppbar() {
+  return const LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [
+      Color.fromARGB(255, 238, 3, 171),
+      Color.fromARGB(255, 60, 8, 173),
+    ],
+  );
+}

@@ -130,19 +130,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         SizedBox(
                           height: 40,
                           width: 300,
-                          child: isLoading
-                              ? const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : ElevatedButton.icon(
-                                  onPressed: updateProfile,
-                                  icon: const Icon(Icons.update),
-                                  label: const Text('Update Profile'),
-                                ),
+                          child: ElevatedButton.icon(
+                            onPressed: updateProfile,
+                            icon: const Icon(Icons.update),
+                            label: const Text('Update Profile'),
+                          ),
                         ),
-                        getVerticalSpace(20),
+                        getVerticalSpace(150),
+                        isLoading
+                            ? const LinearProgressIndicator()
+                            : Container()
                       ],
                     ),
                   ),
@@ -173,9 +170,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         bio: bioController.text,
         file: _image!);
 
-    if (res == 'Profile Updated') {
+    if (res == 'Success') {
       // ignore: use_build_context_synchronously
-      showSnackbar(context, res);
+      showSnackbar(context, "Profile Updated");
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(

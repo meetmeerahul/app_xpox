@@ -1,4 +1,3 @@
-import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,17 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => BottomNavScreen(),
-            ),
-          ),
-        ),
+        automaticallyImplyLeading: false,
         title: TextFormField(
           style: const TextStyle(color: Colors.white),
           controller: _searchController,
@@ -68,7 +57,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(
-                    child: Text("No users found."),
+                    child: Text(
+                      "No mathches found !!",
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
                   );
                 }
 

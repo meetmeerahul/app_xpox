@@ -2,6 +2,7 @@ import 'package:app_xpox/providers/user_provider.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/comment/comment_screen.dart';
 import 'package:app_xpox/screens/edit_post/edit_post_screen.dart';
+import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:app_xpox/screens/widgets/like_animation.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -114,10 +115,19 @@ class _PostCardState extends State<PostCard> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          username,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.white),
+                        GestureDetector(
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ProfileScreen(uid: widget.snap['uid']),
+                            ),
+                          ),
+                          child: Text(
+                            username,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
                         )
                       ],
                     ),

@@ -50,6 +50,7 @@ class ShowFollowersOrFollowings extends StatelessWidget {
       : super(key: key);
 
   final List<dynamic> followersList;
+  // ignore: prefer_typing_uninitialized_variables
   final isFollowers;
 
   @override
