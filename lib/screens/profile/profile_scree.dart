@@ -6,6 +6,7 @@ import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 
 import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
 import 'package:app_xpox/screens/profile/followers.dart';
+import 'package:app_xpox/screens/profile/post_view.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -251,7 +252,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 DocumentSnapshot snap =
                                     (snapshot.data! as dynamic).docs[index];
                                 return GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            PostView(snap: snap),
+                                      ),
+                                    );
+                                  },
                                   child: Image(
                                     image: NetworkImage(snap['postUrl']),
                                     fit: BoxFit.cover,
@@ -335,17 +343,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   logoutButton() {
     return IconButton(
       onPressed: () async {
-        await AuthMethods().signout();
-        const Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.white),
-        );
-        Timer(const Duration(seconds: 5), () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const SigninScreen(),
-            ),
-          );
-        });
+        _showLogoutDialog(context);
       },
       icon: const Icon(
         Icons.logout,
@@ -408,5 +406,95 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (error) {
       print('Error fetching followers: $error');
     }
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget yesButton = TextButton(
+      child: const Text("Yes"),
+      onPressed: () {
+        print('yes');
+      },
+    );
+
+    Widget noButton = TextButton(
+      child: const Text("No"),
+      onPressed: () {
+        print('no');
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Logout"),
+      content: const Text("Are you sure want to logout ??"),
+      actions: [
+        yesButton,
+        noButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  _showLogoutDialog(BuildContext context) {
+    Widget yesButton = TextButton(
+      child: const Text(
+        "Yes",
+      ),
+      onPressed: () async {
+        // setState(() {
+        //   isQuit = true;
+        // });
+
+        await AuthMethods().signout();
+        const Center(
+          child: CircularProgressIndicator(backgroundColor: Colors.white),
+        );
+        Timer(const Duration(seconds: 5), () {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const SigninScreen(),
+            ),
+          );
+        });
+      },
+    );
+
+    Widget noButton = TextButton(
+      child: const Text(
+        "No",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop(); // Close the dialog
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      backgroundColor: Colors.white,
+      title: const Text("Logout", style: TextStyle(color: Colors.black)),
+      content: const Text(
+        "Are you sure you want to logout?",
+        style: TextStyle(color: Colors.black),
+      ),
+      actions: [
+        yesButton,
+        noButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

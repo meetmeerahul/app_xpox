@@ -116,7 +116,9 @@ class AuthMethods {
         res = "User not registred";
       }
     } catch (e) {
-      print(e.toString());
+      print(
+        e.toString(),
+      );
     }
     return res;
   }
