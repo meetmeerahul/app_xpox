@@ -1,4 +1,5 @@
 import 'package:app_xpox/screens/profile/profile_scree.dart';
+import 'package:app_xpox/screens/search/view_post.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +117,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   crossAxisCount: 3,
                   itemBuilder: (context, index) {
                     var postData = snapshot.data!.docs[index].data();
-                    return Image.network(postData['postUrl']);
+                    return GestureDetector(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              ViewPost(postUrl: postData['postUrl']))),
+                      child: Image.network(postData['postUrl']),
+                    );
                   },
                   staggeredTileBuilder: (index) => StaggeredTile.count(
                     index % 7 == 0 ? 2 : 1,
