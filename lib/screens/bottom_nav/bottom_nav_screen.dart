@@ -13,7 +13,7 @@ class BottomNavScreen extends StatelessWidget {
 
   final getIndex = Get.put(NavBarController());
 
-  int currentindex = 0;
+  int currentindex = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class BottomNavScreen extends StatelessWidget {
       const HomeScreen(),
       const SearchScreen(),
       const AddPostScreen(),
-      const Text('Notification'),
+      // const Text('Notification'),
       ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
     ];
     return Scaffold(
@@ -44,10 +44,10 @@ class BottomNavScreen extends StatelessWidget {
               label: '',
               icon: Icon(Icons.add_box_outlined),
             ),
-            BottomNavigationBarItem(
-              label: '',
-              icon: Icon(Icons.notifications_none),
-            ),
+            // BottomNavigationBarItem(
+            //   label: '',
+            //   icon: Icon(Icons.notifications_none),
+            // ),
             BottomNavigationBarItem(
               label: '',
               icon: Icon(Icons.person_outlined),

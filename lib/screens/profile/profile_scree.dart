@@ -408,41 +408,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget yesButton = TextButton(
-      child: const Text("Yes"),
-      onPressed: () {
-        print('yes');
-      },
-    );
-
-    Widget noButton = TextButton(
-      child: const Text("No"),
-      onPressed: () {
-        print('no');
-      },
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: const Text("Logout"),
-      content: const Text("Are you sure want to logout ??"),
-      actions: [
-        yesButton,
-        noButton,
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   _showLogoutDialog(BuildContext context) {
     Widget yesButton = TextButton(
       child: const Text(

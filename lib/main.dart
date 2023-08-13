@@ -24,6 +24,15 @@ Future<void> main() async {
   } else {
     await Firebase.initializeApp();
   }
+
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Colors.white,
+      ),
+    );
+  };
+
   runApp(const MyApp());
 }
 

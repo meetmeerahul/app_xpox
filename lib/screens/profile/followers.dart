@@ -1,4 +1,3 @@
-import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +20,7 @@ class FollowScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => BottomNavScreen(),
-            ),
-          ),
+          onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,

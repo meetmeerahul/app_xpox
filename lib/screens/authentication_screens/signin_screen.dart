@@ -155,10 +155,10 @@ class _SigninScreenState extends State<SigninScreen> {
                                         builder: (context) => BottomNavScreen(),
                                       ),
                                     );
-                                    // } else {
-                                    //   // ignore: use_build_context_synchronously
-                                    //   showSnackbar(
-                                    //       context, "Error Occured in google signin");
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    showSnackbar(context,
+                                        "Error Occured in google signin");
                                   }
                                 },
                                 icon: const Image(

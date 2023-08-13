@@ -23,14 +23,16 @@ class PostView extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Column(
-          children: [
-            getVerticalSpace(MediaQuery.of(context).size.height * 0.1),
-            Image(
-              fit: BoxFit.contain,
-              image: NetworkImage(snap['postUrl']),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              getVerticalSpace(MediaQuery.of(context).size.height * .01),
+              Image(
+                //  fit: BoxFit.contain,
+                image: NetworkImage(snap['postUrl']),
+              ),
+            ],
+          ),
         ),
       ),
     );

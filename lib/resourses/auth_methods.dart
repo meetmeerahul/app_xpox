@@ -135,6 +135,7 @@ class AuthMethods {
       );
       UserCredential userCredential =
           await _auth.signInWithCredential(credentials);
+
       User? user = userCredential.user;
 
       if (user != null) {
@@ -155,6 +156,7 @@ class AuthMethods {
                 googleUser.toJson(),
               );
         }
+        result = true;
       } else {
         GoogleSignIn().signIn();
         Get.to(BottomNavScreen());
