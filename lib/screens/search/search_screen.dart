@@ -1,9 +1,7 @@
 import 'package:app_xpox/screens/profile/profile_scree.dart';
-import 'package:app_xpox/screens/search/view_post.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -26,113 +24,112 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        automaticallyImplyLeading: false,
-        title: TextFormField(
-          style: const TextStyle(color: Colors.white),
-          controller: _searchController,
-          decoration: const InputDecoration(
-            labelText: "Search", // Changed label to labelText
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
+          title: TextFormField(
+            style: const TextStyle(color: Colors.white),
+            controller: _searchController,
+            decoration: const InputDecoration(
+              labelText: "Search", // Changed label to labelText
+            ),
+            onFieldSubmitted: (String value) {
+              setState(() {
+                isShowUser = true;
+              });
+            },
           ),
-          onFieldSubmitted: (String value) {
-            setState(() {
-              isShowUser = true;
-            });
-          },
         ),
-      ),
-      body: isShowUser
-          ? FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              future: FirebaseFirestore.instance
-                  .collection('users')
-                  .where('username',
-                      isGreaterThanOrEqualTo: _searchController.text)
-                  .get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+        body: isShowUser
+            ? FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                future: FirebaseFirestore.instance
+                    .collection('users')
+                    .where('username',
+                        isGreaterThanOrEqualTo: _searchController.text)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      "No mathches found !!",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    var userData = snapshot.data!.docs[index].data();
-                    return InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProfileScreen(
-                              uid: userData['uid'],
-                            ),
-                          ),
-                        );
-                      },
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          radius: 20,
-                          backgroundImage: NetworkImage(userData['photoUrl']),
-                        ),
-                        title: Text(
-                          "${userData['username']}",
-                          style: const TextStyle(color: Colors.white),
-                        ),
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No mathches found !!",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     );
-                  },
-                );
-              },
-            )
-          : FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              future: FirebaseFirestore.instance.collection('posts').get(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  );
-                }
+                  }
 
-                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                  return const Center(
-                    child: Text("No posts available."),
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var userData = snapshot.data!.docs[index].data();
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(
+                                uid: userData['uid'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(userData['photoUrl']),
+                          ),
+                          title: Text(
+                            "${userData['username']}",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    },
                   );
-                }
-
-                return StaggeredGridView.countBuilder(
-                  itemCount: snapshot.data!.docs.length,
-                  crossAxisCount: 3,
-                  itemBuilder: (context, index) {
-                    var postData = snapshot.data!.docs[index].data();
-                    return GestureDetector(
-                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              ViewPost(postUrl: postData['postUrl']))),
-                      child: Image.network(postData['postUrl']),
+                },
+              )
+            : FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                future: FirebaseFirestore.instance.collection('users').get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  },
-                  staggeredTileBuilder: (index) => StaggeredTile.count(
-                    index % 7 == 0 ? 2 : 1,
-                    index % 7 == 0 ? 2 : 1,
-                  ),
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                );
-              },
-            ),
-    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var userData = snapshot.data!.docs[index].data();
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(
+                                uid: userData['uid'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(userData['photoUrl']),
+                          ),
+                          title: Text(
+                            "${userData['username']}",
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ));
   }
 }

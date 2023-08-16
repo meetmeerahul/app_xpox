@@ -18,7 +18,7 @@ class ViewPost extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: const Text(
-          "Vew Photo",
+          "View Photo",
           style: TextStyle(color: Colors.white),
         ),
       ),

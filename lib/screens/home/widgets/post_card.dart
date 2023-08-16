@@ -3,6 +3,7 @@ import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/comment/comment_screen.dart';
 import 'package:app_xpox/screens/edit_post/edit_post_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
+import 'package:app_xpox/screens/search/view_post.dart';
 import 'package:app_xpox/screens/widgets/like_animation.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -198,12 +199,20 @@ class _PostCardState extends State<PostCard> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  child: Image(
-                    image: NetworkImage(widget.snap['postUrl']),
-                    fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          ViewPost(postUrl: widget.snap['postUrl']),
+                    ),
+                  ),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    width: double.infinity,
+                    child: Image(
+                      image: NetworkImage(widget.snap['postUrl']),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
                 AnimatedOpacity(

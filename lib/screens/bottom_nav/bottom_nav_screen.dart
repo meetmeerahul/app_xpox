@@ -24,6 +24,7 @@ class BottomNavScreen extends StatelessWidget {
       // const Text('Notification'),
       ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
     ];
+
     return Scaffold(
       body: Obx(() => pages[getIndex.currentIndex.value]),
       bottomNavigationBar: Obx(
@@ -58,3 +59,4 @@ class BottomNavScreen extends StatelessWidget {
     );
   }
 }
+ 

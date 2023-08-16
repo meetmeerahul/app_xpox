@@ -59,39 +59,18 @@ class _EditPostScreenState extends State<EditPostScreen> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          _isLoading ? const LinearProgressIndicator() : Container(),
-          getVerticalSpace(100),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(user.photoUrl),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: TextField(
-                  controller: _descriptionController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    hintText: "Write a caption",
-                    hintStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 45,
-                width: 45,
-                child: AspectRatio(
-                  aspectRatio: 487 / 451,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _isLoading ? const LinearProgressIndicator() : Container(),
+            getVerticalSpace(100),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 200,
+                  width: 200,
                   child: Container(
                     decoration: BoxDecoration(
                       image: DecorationImage(
@@ -102,12 +81,35 @@ class _EditPostScreenState extends State<EditPostScreen> {
                     ),
                   ),
                 ),
-              )
-            ],
-          ),
-          getVerticalSpace(20),
-          const Divider()
-        ],
+                getVerticalSpace(30),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: TextField(
+                    maxLines: 5,
+                    controller: _descriptionController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                        hintText: "Edit the caption",
+                        hintStyle: TextStyle(color: Colors.white),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Colors.white,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            width: 1,
+                            color: Colors.white,
+                          ),
+                        )),
+                  ),
+                ),
+              ],
+            ),
+            getVerticalSpace(20),
+          ],
+        ),
       ),
     );
   }
