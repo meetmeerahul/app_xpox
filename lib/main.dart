@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/bottom_nav/bottom_nav_screen.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
           create: (_) => UserProvider(),
         ),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'App_XpoX',
         theme: ThemeData(

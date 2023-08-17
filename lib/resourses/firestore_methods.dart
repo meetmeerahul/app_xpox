@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:app_xpox/models/message.dart';
 import 'package:app_xpox/models/post.dart';
 import 'package:app_xpox/resourses/storage_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -155,5 +156,47 @@ class FirestoreMethods {
     }
 
     return res;
+  }
+
+  Future<void> sendMessage(
+      {required receiverId, required message, required senderId}) async {
+    final Timestamp timeStamp = Timestamp.now();
+
+    print(senderId);
+    print(receiverId);
+
+    Message newMessage = Message(
+        senderId: senderId,
+        receiverId: receiverId,
+        timeStamp: timeStamp.toString(),
+        message: message);
+
+    List<String> ids = [senderId, receiverId];
+
+    ids.sort();
+
+    String chatRoomId = ids.join("_");
+
+    await _firebaseFirestore
+        .collection("chat_rooms")
+        .doc(chatRoomId)
+        .collection('messages')
+        .add(
+          newMessage.toMap(),
+        );
+  }
+
+  Stream<QuerySnapshot> getMessages(String sender, String receiver) {
+    List<String> ids = [sender, receiver];
+
+    ids.sort();
+
+    String chatRoomId = ids.join("_");
+    return _firebaseFirestore
+        .collection('chat_rooms')
+        .doc(chatRoomId)
+        .collection('messages')
+        .orderBy('timeStamp', descending: false)
+        .snapshots();
   }
 }

@@ -1,8 +1,10 @@
 import 'package:app_xpox/providers/user_provider.dart';
+import 'package:app_xpox/screens/direct_message/user_list_screen.dart';
 import 'package:app_xpox/screens/home/widgets/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:app_xpox/models/user.dart' as model;
 
@@ -39,7 +41,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Get.to(
+                  const UserListScreen(),
+                );
+              },
               icon: const Icon(
                 Icons.message_outlined,
                 color: Colors.white,

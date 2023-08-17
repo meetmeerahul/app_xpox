@@ -1,9 +1,11 @@
+import 'package:app_xpox/controller/auth_controller.dart';
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/screens/authentication_screens/signin_screen.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
 import 'package:app_xpox/utils/gradiant.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../utils/utils.dart';
 
@@ -17,7 +19,10 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   final TextEditingController _emailController = TextEditingController();
 
+  final authController = Get.put(LoadingController());
+
   bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,20 +62,21 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
               getVerticalSpace(20),
               SizedBox(
-                height: 40,
-                width: 300,
-                child: isLoading != true
-                    ? ElevatedButton.icon(
-                        onPressed: resetPassword,
-                        icon: const Icon(Icons.check),
-                        label: const Text('Reset Password'),
-                      )
-                    : const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      ),
-              ),
+                  height: 40,
+                  width: 300,
+                  child: Obx(
+                    () => !authController.isLoading.value
+                        ? ElevatedButton.icon(
+                            onPressed: resetPassword,
+                            icon: const Icon(Icons.check),
+                            label: const Text('Reset Password'),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          ),
+                  )),
             ],
           ),
         ),
@@ -79,9 +85,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   resetPassword() async {
-    setState(() {
-      isLoading = true;
-    });
+    authController.isLoading.value = true;
 
     String res = await AuthMethods().resetPassword(
       _emailController.text.trim(),
@@ -102,8 +106,6 @@ class _ResetPasswordState extends State<ResetPassword> {
       // ignore: use_build_context_synchronously
       showSnackbar(context, res);
     }
-    setState(() {
-      isLoading = false;
-    });
+    authController.isLoading.value = false;
   }
 }

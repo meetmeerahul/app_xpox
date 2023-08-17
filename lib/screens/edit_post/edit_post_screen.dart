@@ -1,8 +1,10 @@
+import 'package:app_xpox/controller/auth_controller.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/user.dart';
@@ -20,7 +22,7 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
-  bool _isLoading = false;
+  final editPostController = Get.put(LoadingController());
 
   @override
   void initState() {
@@ -62,7 +64,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _isLoading ? const LinearProgressIndicator() : Container(),
+            Obx(
+              () => editPostController.isLoading.value
+                  ? const LinearProgressIndicator()
+                  : Container(),
+            ),
             getVerticalSpace(100),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -115,17 +121,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   updateCaption(String postId, String text) async {
-    setState(() {
-      _isLoading = true;
-    });
+    editPostController.isLoading.value = false;
+
     try {
       String res = await FirestoreMethods()
           .updateData(_descriptionController.text, postId);
       if (res == "Success") {
-        setState(() {
-          _isLoading = false;
-        });
-
+        editPostController.isLoading.value = false;
         // ignore: use_build_context_synchronously
         showSnackbar(context, "Caption Updated!!");
         // ignore: use_build_context_synchronously
@@ -133,10 +135,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
             MaterialPageRoute(builder: (context) => BottomNavScreen()),
             (route) => false);
       } else {
-        setState(() {
-          _isLoading = false;
-        });
-
         // ignore: use_build_context_synchronously
         showSnackbar(context, res);
       }

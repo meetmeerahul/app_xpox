@@ -1,10 +1,12 @@
 import 'dart:typed_data';
 
+import 'package:app_xpox/controller/auth_controller.dart';
 import 'package:app_xpox/providers/user_provider.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +22,10 @@ class AddPostScreen extends StatefulWidget {
 class _AddPostScreenState extends State<AddPostScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   Uint8List? _file;
-  bool _isLoading = false;
+  //bool _isLoading = false;
+
+  final controller = Get.put(LoadingController());
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -75,7 +80,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
-                _isLoading ? const LinearProgressIndicator() : Container(),
+                Obx(() => controller.isLoading.value
+                    ? const LinearProgressIndicator()
+                    : Container()),
                 getVerticalSpace(100),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -173,9 +180,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     String username,
     String profileImage,
   ) async {
-    setState(() {
-      _isLoading = true;
-    });
+    controller.isLoading.value = true;
     try {
       String res = await FirestoreMethods().uploadPost(
         _descriptionController.text,
@@ -185,16 +190,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
         profileImage,
       );
       if (res == "Success") {
-        setState(() {
-          _isLoading = false;
-        });
+        controller.isLoading.value = false;
         clearImage();
         // ignore: use_build_context_synchronously
         showSnackbar(context, "Posted !!");
       } else {
-        setState(() {
-          _isLoading = false;
-        });
+        controller.isLoading.value = false;
         // ignore: use_build_context_synchronously
         showSnackbar(context, res);
       }
