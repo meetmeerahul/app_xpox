@@ -59,6 +59,7 @@ class _NotificationCardState extends State<NotificationCard> {
                                 : const TextSpan()
                           ]),
                         ),
+                        const Divider()
                       ],
                     ),
                   ),
