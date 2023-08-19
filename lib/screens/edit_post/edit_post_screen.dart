@@ -121,6 +121,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   updateCaption(String postId, String text) async {
+    
     editPostController.isLoading.value = false;
 
     try {

@@ -1,6 +1,7 @@
 import 'package:app_xpox/controller/bottom_nav_controller.dart';
 import 'package:app_xpox/screens/add_post/add_post_screen.dart';
 import 'package:app_xpox/screens/home/home_screen.dart';
+import 'package:app_xpox/screens/notifications/notification_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:app_xpox/screens/search/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,7 +22,7 @@ class BottomNavScreen extends StatelessWidget {
       const HomeScreen(),
       const SearchScreen(),
       const AddPostScreen(),
-      // const Text('Notification'),
+      const NotificationScreen(),
       ProfileScreen(uid: FirebaseAuth.instance.currentUser!.uid),
     ];
 
@@ -45,10 +46,10 @@ class BottomNavScreen extends StatelessWidget {
               label: '',
               icon: Icon(Icons.add_box_outlined),
             ),
-            // BottomNavigationBarItem(
-            //   label: '',
-            //   icon: Icon(Icons.notifications_none),
-            // ),
+            BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.notifications_none),
+            ),
             BottomNavigationBarItem(
               label: '',
               icon: Icon(Icons.person_outlined),
@@ -59,4 +60,3 @@ class BottomNavScreen extends StatelessWidget {
     );
   }
 }
- 

@@ -33,6 +33,8 @@ class _PostCardState extends State<PostCard> {
 
   String username = "";
 
+  late DocumentSnapshot postSnap;
+
   late DocumentReference profileDetails;
 
   @override
@@ -46,8 +48,23 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getPostDetails();
     getProfileDetails();
     getComments();
+  }
+
+  void getPostDetails() async {
+    try {
+      postSnap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .get();
+    } catch (er) {
+      showSnackbar(
+        context,
+        er.toString(),
+      );
+    }
   }
 
   void getComments() async {
@@ -56,6 +73,11 @@ class _PostCardState extends State<PostCard> {
           .collection('posts')
           .doc(widget.snap['postId'])
           .collection('comments')
+          .get();
+
+      postSnap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
           .get();
       commentCount = snap.docs.length;
     } catch (er) {
@@ -248,6 +270,14 @@ class _PostCardState extends State<PostCard> {
                         widget.snap['postId'],
                         widget.snap['likes'],
                       );
+
+                      await FirestoreMethods().saveNotifications(
+                          postId: widget.snap['postId'],
+                          text: "liked",
+                          owner: postSnap['uid'],
+                          name: widget.snap['username'],
+                          profilePic: widget.snap['profileImage'],
+                          uid: FirebaseAuth.instance.currentUser!.uid);
                     },
                     icon: widget.snap['likes'].contains(user.uid)
                         ? const Icon(
@@ -262,7 +292,8 @@ class _PostCardState extends State<PostCard> {
               IconButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CommentScreen(snap: widget.snap),
+                    builder: (context) => CommentScreen(
+                        snap: widget.snap, documentSnap: postSnap),
                   ),
                 ),
                 icon: const Icon(

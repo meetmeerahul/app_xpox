@@ -128,6 +128,58 @@ class FirestoreMethods {
     }
   }
 
+  Future<void> saveNotifications({
+    required String postId,
+    required String text,
+    required String uid,
+    required String name,
+    required String profilePic,
+    required String owner,
+  }) async {
+    print(uid);
+    print(owner);
+    print('reached here');
+    try {
+      var id = [owner, postId];
+      if (text.isNotEmpty) {
+        if (text == "commented") {
+          id.sort();
+          id.add('comment');
+        } else if (text == "liked") {
+          id.sort();
+          id.add('liked');
+        } else {
+          id.sort();
+          id.add('followed');
+        }
+
+        String notificationId = id.join("_");
+
+        await _firebaseFirestore
+            .collection('users')
+            .doc(owner)
+            .collection('notofications')
+            .doc(notificationId)
+            .set({
+          'profilePic': profilePic,
+          'postId': postId,
+          'text': text,
+          'notoficationId': notificationId,
+          'name': name,
+          'commentedBy': uid,
+          'datePublished': DateTime.now(),
+          'owner': owner
+        });
+      } else {
+        print('Empty comment');
+      }
+    } catch (e) {
+      print(
+        e.toString(),
+      );
+    }
+  }
+
   Future<String> deletePost(String postId) async {
     String res = "Error";
 
@@ -168,7 +220,7 @@ class FirestoreMethods {
     Message newMessage = Message(
         senderId: senderId,
         receiverId: receiverId,
-        timeStamp: timeStamp.toString(),
+        timeStamp: timeStamp,
         message: message);
 
     List<String> ids = [senderId, receiverId];

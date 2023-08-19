@@ -2,15 +2,19 @@ import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/widgets/comment_card.dart';
 import 'package:app_xpox/screens/widgets/text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../models/user.dart';
+import 'package:app_xpox/models/user.dart' as model;
+
 import '../../providers/user_provider.dart';
 
 class CommentScreen extends StatefulWidget {
   final snap;
-  const CommentScreen({super.key, required this.snap});
+  final documentSnap;
+  const CommentScreen(
+      {super.key, required this.snap, required this.documentSnap});
 
   @override
   State<CommentScreen> createState() => _CommentScreenState();
@@ -27,7 +31,8 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<UserProvider>(context).getUser;
+    model.User user = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -104,6 +109,9 @@ class _CommentScreenState extends State<CommentScreen> {
               ),
               InkWell(
                 onTap: () async {
+                  print(FirebaseAuth.instance.currentUser!.uid);
+                  print("------------------");
+                  print(widget.snap['uid']);
                   await FirestoreMethods().postComments(
                     widget.snap['postId'],
                     _commentController.text,
@@ -111,6 +119,16 @@ class _CommentScreenState extends State<CommentScreen> {
                     user.username,
                     user.photoUrl,
                   );
+
+                  await FirestoreMethods().saveNotifications(
+                    postId: widget.snap['postId'],
+                    text: "commented",
+                    uid: FirebaseAuth.instance.currentUser!.uid,
+                    name: user.username,
+                    profilePic: user.photoUrl,
+                    owner: widget.snap['uid'],
+                  );
+
                   setState(() {
                     _commentController.text = "";
                   });
