@@ -271,13 +271,17 @@ class _PostCardState extends State<PostCard> {
                         widget.snap['likes'],
                       );
 
-                      await FirestoreMethods().saveNotifications(
-                          postId: widget.snap['postId'],
-                          text: "liked",
-                          owner: postSnap['uid'],
-                          name: widget.snap['username'],
-                          profilePic: widget.snap['profileImage'],
-                          uid: FirebaseAuth.instance.currentUser!.uid);
+                      if (widget.snap['uid'] !=
+                          FirebaseAuth.instance.currentUser!.uid) {
+                        await FirestoreMethods().saveNotifications(
+                            postUrl: widget.snap['postUrl'],
+                            postId: widget.snap['postId'],
+                            text: "liked",
+                            owner: postSnap['uid'],
+                            name: widget.snap['username'],
+                            profilePic: widget.snap['profileImage'],
+                            uid: FirebaseAuth.instance.currentUser!.uid);
+                      }
                     },
                     icon: widget.snap['likes'].contains(user.uid)
                         ? const Icon(

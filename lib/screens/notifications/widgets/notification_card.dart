@@ -1,9 +1,6 @@
-import 'package:app_xpox/providers/user_provider.dart';
+import 'package:app_xpox/utils/spacing.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:app_xpox/models/user.dart' as model;
 
 class NotificationCard extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -17,7 +14,10 @@ class NotificationCard extends StatefulWidget {
 class _NotificationCardState extends State<NotificationCard> {
   @override
   Widget build(BuildContext context) {
-    model.User user = Provider.of<UserProvider>(context).getUser;
+    // model.User user = Provider.of<UserProvider>(context).getUser;
+
+    print(widget.snap['owner']);
+    print(FirebaseAuth.instance.currentUser!.uid);
     return widget.snap['owner'] == FirebaseAuth.instance.currentUser!.uid
         ? Container(
             padding: const EdgeInsets.symmetric(
@@ -26,14 +26,14 @@ class _NotificationCardState extends State<NotificationCard> {
             ),
             child: Row(
               children: [
-                // ClipRRect(
-                //   child: Image.network(
-                //     widget.snap['profilePic'],
-                //     width: 36,
-                //     height: 36,
-                //     fit: BoxFit.cover,
-                //   ),
-                // ),
+                ClipRRect(
+                  child: Image.network(
+                    widget.snap['postUrl'],
+                    width: 36,
+                    height: 36,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16),
@@ -56,10 +56,20 @@ class _NotificationCardState extends State<NotificationCard> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : const TextSpan()
+                                : const TextSpan(
+                                    text: " Liked your post",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  )
                           ]),
                         ),
-                        const Divider()
+                        getVerticalSpace(5),
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          color: Colors.white,
+                        )
                       ],
                     ),
                   ),

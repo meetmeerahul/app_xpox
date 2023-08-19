@@ -135,6 +135,7 @@ class FirestoreMethods {
     required String name,
     required String profilePic,
     required String owner,
+    required String postUrl,
   }) async {
     print(uid);
     print(owner);
@@ -168,7 +169,8 @@ class FirestoreMethods {
           'name': name,
           'commentedBy': uid,
           'datePublished': DateTime.now(),
-          'owner': owner
+          'owner': owner,
+          'postUrl': postUrl
         });
       } else {
         print('Empty comment');

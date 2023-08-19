@@ -327,9 +327,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .contains(FirebaseAuth.instance.currentUser!.uid);
 
       setState(() {
-
         userDetails = userSnap;
-        
       });
     } catch (e) {
       showSnackbar(
@@ -386,13 +384,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       userSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(widget
-              .uid) 
+          .doc(widget.uid)
           .get();
 
-
       if (userSnapshot.exists) {
-   
         if (userSnapshot.data()!.containsKey('username')) {
           List<dynamic> followers = userSnapshot['followings'];
 

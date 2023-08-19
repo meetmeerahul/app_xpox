@@ -120,14 +120,17 @@ class _CommentScreenState extends State<CommentScreen> {
                     user.photoUrl,
                   );
 
-                  await FirestoreMethods().saveNotifications(
-                    postId: widget.snap['postId'],
-                    text: "commented",
-                    uid: FirebaseAuth.instance.currentUser!.uid,
-                    name: user.username,
-                    profilePic: user.photoUrl,
-                    owner: widget.snap['uid'],
-                  );
+                  if (widget.snap['uid'] !=
+                      FirebaseAuth.instance.currentUser!.uid) {
+                    await FirestoreMethods().saveNotifications(
+                        postId: widget.snap['postId'],
+                        text: "commented",
+                        uid: FirebaseAuth.instance.currentUser!.uid,
+                        name: user.username,
+                        profilePic: user.photoUrl,
+                        owner: widget.snap['uid'],
+                        postUrl: widget.snap['postUrl']);
+                  }
 
                   setState(() {
                     _commentController.text = "";
