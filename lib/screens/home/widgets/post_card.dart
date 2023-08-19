@@ -37,6 +37,8 @@ class _PostCardState extends State<PostCard> {
 
   late DocumentReference profileDetails;
 
+  //late DocumentSnapshot currentUserSnapshot;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -48,6 +50,7 @@ class _PostCardState extends State<PostCard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // getCurrentUser();
     getPostDetails();
     getProfileDetails();
     getComments();
@@ -272,14 +275,15 @@ class _PostCardState extends State<PostCard> {
                       );
 
                       if (widget.snap['uid'] !=
-                          FirebaseAuth.instance.currentUser!.uid) {
+                              FirebaseAuth.instance.currentUser!.uid &&
+                          widget.snap['likes'].contains(user.uid)) {
                         await FirestoreMethods().saveNotifications(
                             postUrl: widget.snap['postUrl'],
                             postId: widget.snap['postId'],
                             text: "liked",
                             owner: postSnap['uid'],
-                            name: widget.snap['username'],
-                            profilePic: widget.snap['profileImage'],
+                            name: user.username,
+                            profilePic: user.photoUrl,
                             uid: FirebaseAuth.instance.currentUser!.uid);
                       }
                     },
@@ -416,4 +420,17 @@ class _PostCardState extends State<PostCard> {
       showSnackbar(context, "Post Deleted");
     }
   }
+
+  // Future<void> getCurrentUser() async {
+  //   try {
+  //     currentUserSnapshot = await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(FirebaseAuth.instance.currentUser!.uid)
+  //         .get();
+
+  //     // Check if the document exists
+  //   } catch (error) {
+  //     print('Error fetching followers: $error');
+  //   }
+  // }
 }

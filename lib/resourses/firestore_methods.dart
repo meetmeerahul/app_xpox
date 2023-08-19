@@ -55,6 +55,10 @@ class FirestoreMethods {
           await _firebaseFirestore.collection('users').doc(uid).get();
       List followings = (snap.data()! as dynamic)['followings'];
 
+
+     
+
+
       if (followings.contains(followId)) {
         await _firebaseFirestore.collection('users').doc(followId).update({
           'followers': FieldValue.arrayRemove([uid])

@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: null,
         backgroundColor: Colors.black,
         title: const Image(
           image: AssetImage('assets/logo.png'),

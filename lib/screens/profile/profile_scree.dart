@@ -26,12 +26,15 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late var userDetails;
+
   var userData = {};
   int postLen = 0;
   int followers = 0;
   int followings = 0;
   bool isFollowing = false;
   bool isLoading = false;
+
+  late var userSnap;
 
   List<dynamic> followersTopass = [];
 
@@ -40,10 +43,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isQuit = false;
 
   late DocumentSnapshot<Map<String, dynamic>> userSnapshot;
+  late DocumentSnapshot<Map<String, dynamic>> currentUserSnapshot;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    getCurrentUser();
     getData();
     getFollowers();
     getFollowings();
@@ -184,10 +189,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                         .currentUser!.uid,
                                                     userData['uid'],
                                                   );
-                                                  setState(() {
-                                                    isFollowing = true;
-                                                    followers++;
-                                                  });
+
+                                                  // print(
+                                                  //     userSnap['profileImage']);
+
+                                                  // // print(currentUserSnapshot[
+                                                  // //     'profileImage']);
+                                                  // // print(
+                                                  // //     userSnap['profileImage']);
+
+                                                  await FirestoreMethods()
+                                                      .saveNotifications(
+                                                          name:
+                                                              currentUserSnapshot[
+                                                                  'username'],
+                                                          owner:
+                                                              userData['uid'],
+                                                          postId: "null",
+                                                          postUrl: userSnap[
+                                                              'photoUrl'],
+                                                          profilePic:
+                                                              currentUserSnapshot[
+                                                                  'photoUrl'],
+                                                          text: "followed",
+                                                          uid: FirebaseAuth
+                                                              .instance
+                                                              .currentUser!
+                                                              .uid);
+
+                                                  setState(
+                                                    () {
+                                                      isFollowing = true;
+                                                      followers++;
+                                                    },
+                                                  );
                                                 },
                                               )
                                   ],
@@ -309,7 +344,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading = true;
     });
     try {
-      var userSnap = await FirebaseFirestore.instance
+      userSnap = await FirebaseFirestore.instance
           .collection('users')
           .doc(widget.uid)
           .get();
@@ -458,5 +493,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return alert;
       },
     );
+  }
+
+  Future<void> getCurrentUser() async {
+    try {
+      currentUserSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      // Check if the document exists
+    } catch (error) {
+      print('Error fetching followers: $error');
+    }
   }
 }
