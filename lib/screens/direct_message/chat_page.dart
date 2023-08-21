@@ -1,4 +1,5 @@
 import 'package:app_xpox/resourses/firestore_methods.dart';
+import 'package:app_xpox/resourses/local_notifications.dart';
 import 'package:app_xpox/screens/direct_message/user_list_screen.dart';
 import 'package:app_xpox/utils/spacing.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,6 +52,11 @@ class _ChatScreenState extends State<ChatScreen> {
           senderId: senderData['uid']);
       _messageController.clear();
     }
+
+    LocalNotificationService.sendNotifications(
+        _messageController.text,
+        "New Message from ${senderData['username']} ",
+        receiverData['fcmToken']);
   }
 
   @override
@@ -63,6 +69,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(receiverData['username']);
+    print(senderData['username']);
+
     print("restarted");
     return Scaffold(
       appBar: AppBar(
@@ -71,16 +80,25 @@ class _ChatScreenState extends State<ChatScreen> {
           receiverData['username'],
           style: const TextStyle(color: Colors.white),
         ),
-        leading: IconButton(
-            onPressed: () {
-              Get.off(
-                const UserListScreen(),
-              );
-            },
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            )),
+        leading: Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                Get.off(
+                  const UserListScreen(),
+                );
+              },
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+            CircleAvatar(
+              radius: 0, // Adjust the radius as needed
+              backgroundImage: NetworkImage(receiverData['photoUrl']),
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -215,7 +233,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 borderRadius: BorderRadius.circular(25.0),
               ),
               suffixIcon: GestureDetector(
-                onTap: () => sendMessageToStorage(),
+                onTap: () => {sendMessageToStorage()},
                 child: const Icon(Icons.send),
               ),
             ),

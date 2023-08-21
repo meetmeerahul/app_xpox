@@ -1,6 +1,10 @@
+import 'package:app_xpox/screens/profile/profile_scree.dart';
+import 'package:app_xpox/screens/search/view_post.dart';
 import 'package:app_xpox/utils/spacing.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class NotificationCard extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -12,6 +16,8 @@ class NotificationCard extends StatefulWidget {
 }
 
 class _NotificationCardState extends State<NotificationCard> {
+  late DocumentSnapshot userSnap;
+
   @override
   Widget build(BuildContext context) {
     // model.User user = Provider.of<UserProvider>(context).getUser;
@@ -28,9 +34,15 @@ class _NotificationCardState extends State<NotificationCard> {
                 ),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 23, // Adjust the radius as needed
-                      backgroundImage: NetworkImage(widget.snap['profilePic']),
+                    GestureDetector(
+                      onTap: () => Get.to(
+                        ProfileScreen(uid: widget.snap['commentedBy']),
+                      ),
+                      child: CircleAvatar(
+                        radius: 23, // Adjust the radius as needed
+                        backgroundImage:
+                            NetworkImage(widget.snap['profilePic']),
+                      ),
                     ),
                     Expanded(
                       child: Padding(
@@ -39,35 +51,40 @@ class _NotificationCardState extends State<NotificationCard> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            RichText(
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text: widget.snap['name'],
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                widget.snap['text'] == "commented"
-                                    ? const TextSpan(
-                                        text: " Commented on your post",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      )
-                                    : widget.snap['text'] == "followed"
-                                        ? const TextSpan(
-                                            text: " started following you ",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : const TextSpan(
-                                            text: " Liked your post",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          )
-                              ]),
+                            GestureDetector(
+                              onTap: () => Get.to(
+                                ProfileScreen(uid: widget.snap['commentedBy']),
+                              ),
+                              child: RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(
+                                    text: widget.snap['name'],
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  widget.snap['text'] == "commented"
+                                      ? const TextSpan(
+                                          text: " Commented on your post",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                      : widget.snap['text'] == "followed"
+                                          ? const TextSpan(
+                                              text: " started following you ",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : const TextSpan(
+                                              text: " Liked your post",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                ]),
+                              ),
                             ),
                             getVerticalSpace(5),
                           ],
@@ -76,12 +93,17 @@ class _NotificationCardState extends State<NotificationCard> {
                     ),
                     widget.snap['text'] == "commented" ||
                             widget.snap['text'] == "liked"
-                        ? ClipRRect(
-                            child: Image.network(
-                              widget.snap['postUrl'],
-                              width: 50,
-                              height: 50,
-                              fit: BoxFit.cover,
+                        ? GestureDetector(
+                            onTap: () => Get.to(
+                              ViewPost(postUrl: widget.snap['postUrl']),
+                            ),
+                            child: ClipRRect(
+                              child: Image.network(
+                                widget.snap['postUrl'],
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           )
                         : const Text(""),
@@ -96,5 +118,18 @@ class _NotificationCardState extends State<NotificationCard> {
             ],
           )
         : Container();
+  }
+
+  Future<void> getCurrentUser() async {
+    try {
+      userSnap = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+
+      // Check if the document exists
+    } catch (error) {
+      print('Error fetching followers: $error');
+    }
   }
 }

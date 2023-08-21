@@ -1,20 +1,40 @@
 import 'package:app_xpox/controller/bottom_nav_controller.dart';
+import 'package:app_xpox/resourses/local_notifications.dart';
 import 'package:app_xpox/screens/add_post/add_post_screen.dart';
 import 'package:app_xpox/screens/home/home_screen.dart';
 import 'package:app_xpox/screens/notifications/notification_screen.dart';
 import 'package:app_xpox/screens/profile/profile_scree.dart';
 import 'package:app_xpox/screens/search/search_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 // ignore: must_be_immutable
-class BottomNavScreen extends StatelessWidget {
-  BottomNavScreen({super.key});
+class BottomNavScreen extends StatefulWidget {
+  const BottomNavScreen({super.key});
 
+  @override
+  State<BottomNavScreen> createState() => _BottomNavScreenState();
+}
+
+class _BottomNavScreenState extends State<BottomNavScreen> {
   final getIndex = Get.put(NavBarController());
 
   int currentindex = 4;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseMessaging.instance.getInitialMessage();
+    FirebaseMessaging.onMessage.listen((message) {
+      print(message.notification!.title);
+      print(message.notification!.body);
+      LocalNotificationService.display(message);
+    });
+    
+  }
 
   @override
   Widget build(BuildContext context) {

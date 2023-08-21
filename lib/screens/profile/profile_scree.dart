@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
-import 'package:app_xpox/screens/bottom_nav/bottom_nav_screen.dart';
 
 import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
 import 'package:app_xpox/screens/profile/followers.dart';
@@ -65,22 +64,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         : Scaffold(
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               backgroundColor: Colors.black,
               title: Text(
                 userData['username'],
                 style: const TextStyle(color: Colors.white),
               ),
-              leading: IconButton(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => BottomNavScreen(),
-                  ),
-                ),
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              ),
+              // leading: IconButton(
+              //   onPressed: () => Navigator.of(context).push(
+              //     MaterialPageRoute(
+              //       builder: (context) => BottomNavScreen(),
+              //     ),
+              //   ),
+              //   icon: const Icon(
+              //     Icons.arrow_back,
+              //     color: Colors.white,
+              //   ),
+              // ),
               actions: [
                 logoutButton(),
               ],

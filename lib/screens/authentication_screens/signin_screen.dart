@@ -1,3 +1,4 @@
+import 'package:app_xpox/resourses/local_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/screens/authentication_screens/reset_password.dart';
@@ -150,11 +151,13 @@ class _SigninScreenState extends State<SigninScreen> {
                             bool result =
                                 await AuthMethods().signInWithGoogle();
 
+                            LocalNotificationService.storeToken();
+
                             if (result) {
                               // ignore: use_build_context_synchronously
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => BottomNavScreen(),
+                                  builder: (context) => const BottomNavScreen(),
                                 ),
                               );
                             } else {
@@ -215,10 +218,12 @@ class _SigninScreenState extends State<SigninScreen> {
       password: passwordController.text,
     );
 
+    LocalNotificationService.storeToken();
+
     if (res == "Success") {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => BottomNavScreen(),
+          builder: (context) => const BottomNavScreen(),
         ),
       );
     } else {
