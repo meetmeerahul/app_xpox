@@ -4,6 +4,7 @@ import 'package:app_xpox/models/message.dart';
 import 'package:app_xpox/models/post.dart';
 import 'package:app_xpox/resourses/storage_methods.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
 class FirestoreMethods {
@@ -54,10 +55,6 @@ class FirestoreMethods {
       DocumentSnapshot snap =
           await _firebaseFirestore.collection('users').doc(uid).get();
       List followings = (snap.data()! as dynamic)['followings'];
-
-
-     
-
 
       if (followings.contains(followId)) {
         await _firebaseFirestore.collection('users').doc(followId).update({
@@ -184,6 +181,26 @@ class FirestoreMethods {
         e.toString(),
       );
     }
+  }
+
+  Future<String> savePostForFuture(snap) async {
+    String res = "error";
+    try {
+      await _firebaseFirestore
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('savedPost')
+          .doc(snap['postId'])
+          .set({
+        'postId': snap['postId'],
+        'postUrl': snap['postUrl'],
+        'dateSaved': DateTime.now()
+      });
+      res = "success";
+    } catch (e) {
+      res = e.toString();
+    }
+    return res;
   }
 
   Future<String> deletePost(String postId) async {

@@ -6,11 +6,13 @@ import 'package:app_xpox/resourses/firestore_methods.dart';
 import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
 import 'package:app_xpox/screens/profile/followers.dart';
 import 'package:app_xpox/screens/profile/post_view.dart';
+import 'package:app_xpox/screens/profile/saveed_posts.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../authentication_screens/signin_screen.dart';
 
@@ -82,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //   ),
               // ),
               actions: [
-                logoutButton(),
+                popUpButton(),
               ],
             ),
             body: ListView(
@@ -375,17 +377,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  logoutButton() {
-    return IconButton(
-      onPressed: () async {
-        _showLogoutDialog(context);
-      },
+  popUpButton() {
+    return PopupMenuButton(
+      color: Colors.black,
       icon: const Icon(
-        Icons.logout,
+        Icons.more_vert,
         color: Colors.white,
       ),
+      onSelected: (value) {
+        if (value == 0) {
+          Get.to(
+            const SavedPosts(),
+          );
+        }
+        if (value == 1) {
+          print('value2');
+        }
+        if (value == 2) {
+          _showLogoutDialog(context);
+        }
+      }, // <-- Add a closing bracket here
+
+      itemBuilder: (BuildContext context) {
+        return [
+          const PopupMenuItem(
+            value: 0,
+            child: Text(
+              'Saved Posts',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          const PopupMenuItem(
+            value: 1,
+            child: Text('Settings', style: TextStyle(color: Colors.white)),
+          ),
+          const PopupMenuItem(
+            value: 2,
+            child: Text('LogOut', style: TextStyle(color: Colors.white)),
+          ),
+        ];
+      },
     );
-  }
+  } // <-- Add a closing bracket here
 
   Future<void> getFollowers() async {
     try {

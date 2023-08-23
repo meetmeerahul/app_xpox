@@ -1,31 +1,26 @@
-import 'package:app_xpox/screens/notifications/widgets/notification_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+import 'widgets/saved_post_card.dart';
 
-  @override
-  State<NotificationScreen> createState() => _NotificationScreenState();
-}
-
-class _NotificationScreenState extends State<NotificationScreen> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print('Hell');
-  }
+class SavedPosts extends StatelessWidget {
+  const SavedPosts({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.black,
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         title: const Text(
-          "Notifications",
+          'Saved Posts',
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -33,8 +28,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         stream: FirebaseFirestore.instance
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
-            .collection('notofications')
-            .orderBy('datePublished', descending: true)
+            .collection('savedPost')
+            .orderBy('dateSaved', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,18 +39,17 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             );
           }
-
           return (snapshot.data! as dynamic).docs.length == 0
               ? const Center(
                   child: Text(
-                    "No new notifications",
+                    "No posts saved yet !!",
                     style: TextStyle(color: Colors.white),
                   ),
                 )
               : ListView.builder(
                   itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) {
-                    return NotificationCard(
+                    return SavedPostCard(
                       snap: (snapshot.data! as dynamic).docs[index].data(),
                     );
                   },

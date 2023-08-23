@@ -166,6 +166,7 @@ class _PostCardState extends State<PostCard> {
                 //====================Edit deletepost===========================================
                 widget.snap['uid'] == FirebaseAuth.instance.currentUser!.uid
                     ? PopupMenuButton(
+                        color: Colors.black,
                         icon: const Icon(
                           Icons.more_vert,
                           color: Colors.white,
@@ -189,23 +190,33 @@ class _PostCardState extends State<PostCard> {
                           return [
                             const PopupMenuItem(
                               value: 0, //---add this line
-                              child: Text('Edit'),
+                              child: Text('Edit',
+                                  style: TextStyle(color: Colors.white)),
                             ),
                             const PopupMenuItem(
                               value: 1,
-                              child: Text('Delete'),
+                              child: Text('Delete',
+                                  style: TextStyle(color: Colors.white)),
                             ),
                           ];
                         })
                     : PopupMenuButton(
-                        icon: const Icon(Icons.more_vert),
-                        surfaceTintColor: Colors.black,
-                        color: Colors.white,
+                        color: Colors.black,
+                        icon: const Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        ),
+                        onSelected: (value) {
+                          if (value == 0) {
+                            savePost(snap: widget.snap);
+                          }
+                        },
                         itemBuilder: (context) => [
                               const PopupMenuItem(
+                                value: 0,
                                 child: Text(
                                   "Save",
-                                  style: TextStyle(color: Colors.black),
+                                  style: TextStyle(color: Colors.white),
                                 ),
                               )
                             ])
@@ -319,18 +330,18 @@ class _PostCardState extends State<PostCard> {
                   color: Colors.white,
                 ),
               ),
-              Expanded(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.bookmark,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              )
+              // Expanded(
+              //   child: Align(
+              //     alignment: Alignment.bottomRight,
+              //     child: IconButton(
+              //       onPressed: () {},
+              //       icon: const Icon(
+              //         Icons.bookmark,
+              //         color: Colors.white,
+              //       ),
+              //     ),
+              //   ),
+              // )
             ],
           ),
           Container(
@@ -424,16 +435,25 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
-  // Future<void> getCurrentUser() async {
-  //   try {
-  //     currentUserSnapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(FirebaseAuth.instance.currentUser!.uid)
-  //         .get();
+  Future<void> savePost({required snap}) async {
+    String res = "error";
 
-  //     // Check if the document exists
-  //   } catch (error) {
-  //     print('Error fetching followers: $error');
-  //   }
-  // }
+    try {
+      res = await FirestoreMethods().savePostForFuture(snap);
+    } catch (e) {
+      showSnackbar(
+        context,
+        e.toString(),
+      );
+    }
+
+    if (res == 'success') {
+      showSnackbar(
+        context,
+        "Post saved",
+      );
+    } else {
+      showSnackbar(context, res);
+    }
+  }
 }

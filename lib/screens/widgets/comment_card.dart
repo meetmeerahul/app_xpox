@@ -65,14 +65,14 @@ class _CommentCardState extends State<CommentCard> {
               ),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.all(8),
-            child: const Icon(
-              Icons.favorite,
-              color: Colors.white,
-              size: 16,
-            ),
-          )
+          // Container(
+          //   padding: const EdgeInsets.all(8),
+          //   child: const Icon(
+          //     Icons.favorite,
+          //     color: Colors.white,
+          //     size: 16,
+          //   ),
+          // )
         ],
       ),
     );

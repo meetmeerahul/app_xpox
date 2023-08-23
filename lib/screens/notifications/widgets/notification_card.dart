@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class NotificationCard extends StatefulWidget {
   // ignore: prefer_typing_uninitialized_variables
@@ -87,6 +88,13 @@ class _NotificationCardState extends State<NotificationCard> {
                               ),
                             ),
                             getVerticalSpace(5),
+                            Text(
+                              DateFormat.MMMd('en_US').add_jm().format(
+                                    widget.snap['datePublished'].toDate(),
+                                  ),
+                              style: TextStyle(
+                                  color: Colors.grey.shade600, fontSize: 12),
+                            )
                           ],
                         ),
                       ),

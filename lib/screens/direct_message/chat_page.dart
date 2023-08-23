@@ -301,7 +301,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget chatBubble(data) {
     return Container(
-      height: 40,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -313,4 +312,6 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
+
 }
