@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:app_xpox/resourses/auth_methods.dart';
 import 'package:app_xpox/resourses/firestore_methods.dart';
 
 import 'package:app_xpox/screens/edit_profile/edit_profile.dart';
 import 'package:app_xpox/screens/profile/followers.dart';
 import 'package:app_xpox/screens/profile/post_view.dart';
 import 'package:app_xpox/screens/profile/saveed_posts.dart';
+import 'package:app_xpox/screens/profile/widgets/settings.dart';
 import 'package:app_xpox/screens/widgets/follow_button.dart';
 import 'package:app_xpox/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../authentication_screens/signin_screen.dart';
+import 'widgets/logout_dialouge.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -391,10 +391,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         }
         if (value == 1) {
-          print('value2');
+          Get.to(const SettingsPage());
         }
         if (value == 2) {
-          _showLogoutDialog(context);
+          showLogoutDialog(context);
         }
       }, // <-- Add a closing bracket here
 
@@ -471,61 +471,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } catch (error) {
       print('Error fetching followers: $error');
     }
-  }
-
-  _showLogoutDialog(BuildContext context) {
-    Widget yesButton = TextButton(
-      child: const Text(
-        "Yes",
-      ),
-      onPressed: () async {
-        // setState(() {
-        //   isQuit = true;
-        // });
-
-        await AuthMethods().signout();
-        const Center(
-          child: CircularProgressIndicator(backgroundColor: Colors.white),
-        );
-        Timer(const Duration(seconds: 5), () {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const SigninScreen(),
-            ),
-          );
-        });
-      },
-    );
-
-    Widget noButton = TextButton(
-      child: const Text(
-        "No",
-        style: TextStyle(color: Colors.black),
-      ),
-      onPressed: () {
-        Navigator.of(context).pop(); // Close the dialog
-      },
-    );
-
-    AlertDialog alert = AlertDialog(
-      backgroundColor: Colors.white,
-      title: const Text("Logout", style: TextStyle(color: Colors.black)),
-      content: const Text(
-        "Are you sure you want to logout?",
-        style: TextStyle(color: Colors.black),
-      ),
-      actions: [
-        yesButton,
-        noButton,
-      ],
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 
   Future<void> getCurrentUser() async {
