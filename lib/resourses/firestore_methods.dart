@@ -194,7 +194,11 @@ class FirestoreMethods {
           .set({
         'postId': snap['postId'],
         'postUrl': snap['postUrl'],
-        'dateSaved': DateTime.now()
+        'profileImage': snap['profileImage'],
+        'username': snap['username'],
+        'description': snap['description'],
+        'postOwner': snap['uid'],
+        'dateSaved': DateTime.now(),
       });
       res = "success";
     } catch (e) {
