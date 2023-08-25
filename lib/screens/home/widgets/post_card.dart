@@ -439,7 +439,19 @@ class _PostCardState extends State<PostCard> {
     String res = "error";
 
     try {
-      res = await FirestoreMethods().savePostForFuture(snap);
+      DocumentReference docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('savedPost')
+          .doc(widget.snap['postId']);
+
+      DocumentSnapshot docSnap = await docRef.get();
+
+      if (docSnap.exists) {
+        res = "saved";
+      } else {
+        res = await FirestoreMethods().savePostForFuture(snap);
+      }
     } catch (e) {
       showSnackbar(
         context,
@@ -452,6 +464,8 @@ class _PostCardState extends State<PostCard> {
         context,
         "Post saved",
       );
+    } else if (res == "saved") {
+      showSnackbar(context, "This post already saved ");
     } else {
       showSnackbar(context, res);
     }
