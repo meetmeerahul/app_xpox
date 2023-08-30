@@ -24,6 +24,7 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   final TextEditingController _textFieldController = TextEditingController();
+
   // ignore: prefer_typing_uninitialized_variables
 
   bool isLikeAnimating = false;
@@ -465,7 +466,7 @@ class _PostCardState extends State<PostCard> {
         "Post saved",
       );
     } else if (res == "saved") {
-      showSnackbar(context, "This post already saved ");
+      showSnackbar(context, "This post already saved");
     } else {
       showSnackbar(context, res);
     }

@@ -4,4 +4,6 @@ class LoadingController extends GetxController {
   final isLoading = false.obs;
 
   final isShowing = false.obs;
+
+  final isThere = false.obs;
 }
